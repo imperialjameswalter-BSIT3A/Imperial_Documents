@@ -1,0 +1,10 @@
+Login
+This day, our team designed the Login screen for the Small Store Management app. You choose your role first, Admin or Cashier. Then you type your username and password. Tap Log In to enter the system. Each role sees only the tools it needs. This keeps your store data safe.
+Dashboard
+This day, our team designed the Dashboard. It shows your store's status for today. Today's Overview lists Total Sales, Total Utang, Transactions, and Profits in pesos. The Notice box shows reminders like low stock or unpaid utang. The bottom bar takes you to every screen. Tap Log Out at the top right when you finish.
+Sells
+This day, our team designed the Sells screen. You record each sale here. Type in the search bar to find a product fast. Tap a product card to add it to the sale. Each card shows the name and price, like Itlog at P10 or Canton at P22. Pick Cash or Utang as the payment type. For cash, type the amount received. Tap Charge to finish the sale.
+Customer/Utang
+This day, our team designed the Customer/Utang screen. It lists customers who owe you money. Each row shows the name and the amount owed. Juan Dela Cruz, Maria Antipolo, Mark Hernandez, and Marites Santos each owe P500. Tap Paid when a customer settles the debt. The list updates, so you always know who still owes you.
+Products and Inventory Stocks
+This day, our team designed the Products and Inventory Stocks screen. You add new items here. Type the name, price, stock count, and cost. Tap Add to save the item. The system uses these details in the Sells screen and in the Dashboard profit total. Check this screen often to keep your stock counts correct.
