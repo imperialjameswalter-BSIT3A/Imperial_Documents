@@ -8,3 +8,106 @@ Customer/Utang
 This day, our team designed the Customer/Utang screen. It lists customers who owe you money. Each row shows the name and the amount owed. Juan Dela Cruz, Maria Antipolo, Mark Hernandez, and Marites Santos each owe P500. Tap Paid when a customer settles the debt. The list updates, so you always know who still owes you.
 Products and Inventory Stocks
 This day, our team designed the Products and Inventory Stocks screen. You add new items here. Type the name, price, stock count, and cost. Tap Add to save the item. The system uses these details in the Sells screen and in the Dashboard profit total. Check this screen often to keep your stock counts correct.
+
+
+I. INTRODUCTION
+
+ Background of the System
+
+Small sari-sari store owners commonly manage sales, products, inventory, and customer credit manually. This can make it difficult to track daily sales and available stocks.
+
+ 
+
+The POS and Inventory Management System will help store owners manage their products, sales, inventory, and customer credit records in one system.
+
+Problem
+
+Small shop owners may struggle to track daily sales, products stocks, and customer credit reccord. Manual recording can also cause and make it difficult to monitor the business.
+
+Purpose of the System
+
+The system is designed to help small sari-sari store owners manage sales, products, inventory, and customer credit more easily.
+
+ Users of the System
+
+Owner
+
+· Manage products and inventory
+
+· View sales and reports
+
+· Manage cashier accounts
+
+· Manage customer credit
+
+Cashier
+
+· Process customer purchases
+
+· View products
+
+· Record payments
+
+· Record customer credit
+
+Type of Application
+
+Mobile Application
+
+System Description
+
+The system is a POS nad Inventory Management System for a Sari-sari store.
+
+It allows the owner and casshier to process sales, manage products, monitor inventory, view sales records, and record customer credits.
+
+II. System Requirements
+
+1. Functional Requirements
+
+1. The system should allow the owner and cashier to log in securely.
+
+2. The owner can add, edit, and remove products.
+
+3. The system automatically reduces the stock of the product when a sale is confirmed.
+
+4. The cashier can process customer purchases.
+
+5. The system calculates the total amount and the change.
+
+6. The system logs the completed sale transactions.
+
+7. The owner can see the sales reports daily and monthly.
+
+8. When a product reaches the minimum stock level the system inform the owner.
+
+9. Users can record customer credit (purchased products, total amount, payment & remaining balance).
+
+2. Non-Functional Requirements
+
+1. The system should be simple and easy to use.
+
+2. Sales transactions should be processed within a few seconds.
+
+3. Only authorized users can access the system.
+
+4. The system should support basic offline use.
+
+5. Completed sales should not be accidentally lost.
+
+3. Business Rules
+
+1. Product stock decreases automatically after a successful sale.
+
+2. Only the owner can add, edit, or delete products.
+
+3. The cashier can ring up sales , but can not directly change inventory .
+
+4. A product is marked as low stock when its quantity reaches the minimum level.
+
+5. A sale cannot be completed if the requested quantity exceeds the available stock.
+
+6. Only the owner can manage cashier accounts.
+
+ 
+
+III. UI/UX DESIGN
