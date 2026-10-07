@@ -78,6 +78,19 @@ II. System Requirements
 
 7. The owner can see the sales reports daily and monthly.
 
+Ito yung mga handouts, kayo na bahala mag expand nito
+
+1. Project Title - Bespren Johny's Fried Chicken Order Management System
+2. Business Background - (ask the interviewers about this)
+3. Business Problem - (ask the interviewers about this)
+4. Proposed Solution - A web-based order management system
+5. Objectives - To make customer ordering online much easier, and attract more customers via the landing page
+6. Scope and Limitations - It does not track the order delivery in real-time
+7. System Features - Landing page, user account management, ordering system
+8. Database Design (ERD) - Nasa GitHub issues ito pero this is to be discussed ulit
+9. System Screenshots - Wala pa muna ito
+10. Conclusion - Wala pa muna ito
+
 8. When a product reaches the minimum stock level the system inform the owner.
 
 9. Users can record customer credit (purchased products, total amount, payment & remaining balance).
