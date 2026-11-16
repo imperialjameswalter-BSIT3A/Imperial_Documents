@@ -1,126 +1,140 @@
-Login
-This day, our team designed the Login screen for the Small Store Management app. You choose your role first, Admin or Cashier. Then you type your username and password. Tap Log In to enter the system. Each role sees only the tools it needs. This keeps your store data safe.
-Dashboard
-This day, our team designed the Dashboard. It shows your store's status for today. Today's Overview lists Total Sales, Total Utang, Transactions, and Profits in pesos. The Notice box shows reminders like low stock or unpaid utang. The bottom bar takes you to every screen. Tap Log Out at the top right when you finish.
-Sells
-This day, our team designed the Sells screen. You record each sale here. Type in the search bar to find a product fast. Tap a product card to add it to the sale. Each card shows the name and price, like Itlog at P10 or Canton at P22. Pick Cash or Utang as the payment type. For cash, type the amount received. Tap Charge to finish the sale.
-Customer/Utang
-This day, our team designed the Customer/Utang screen. It lists customers who owe you money. Each row shows the name and the amount owed. Juan Dela Cruz, Maria Antipolo, Mark Hernandez, and Marites Santos each owe P500. Tap Paid when a customer settles the debt. The list updates, so you always know who still owes you.
-Products and Inventory Stocks
-This day, our team designed the Products and Inventory Stocks screen. You add new items here. Type the name, price, stock count, and cost. Tap Add to save the item. The system uses these details in the Sells screen and in the Dashboard profit total. Check this screen often to keep your stock counts correct.
+#MODELS.PY
+from django.db import models
 
 
-I. INTRODUCTION
+class Student(models.Model):
+    student_id = models.CharField(max_length=20, unique=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    birthdate = models.DateField(null=True, blank=True)
+    address = models.CharField(max_length=255, blank=True)
 
- Background of the System
+    def __str__(self):
+        return f"{self.last_name}, {self.first_name}"
 
-Small sari-sari store owners commonly manage sales, products, inventory, and customer credit manually. This can make it difficult to track daily sales and available stocks.
 
- 
+class Course(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    title = models.CharField(max_length=150)
+    units = models.PositiveSmallIntegerField(default=3)
 
-The POS and Inventory Management System will help store owners manage their products, sales, inventory, and customer credit records in one system.
+    def __str__(self):
+        return f"{self.code} - {self.title}"
 
-Problem
 
-Small shop owners may struggle to track daily sales, products stocks, and customer credit reccord. Manual recording can also cause and make it difficult to monitor the business.
+class Enrollment(models.Model):
+    SEMESTERS = [
+        ("1st", "1st Semester"),
+        ("2nd", "2nd Semester"),
+        ("Summer", "Summer"),
+    ]
 
-Purpose of the System
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    school_year = models.CharField(max_length=9)
+    semester = models.CharField(max_length=10, choices=SEMESTERS)
+    date_enrolled = models.DateField(auto_now_add=True)
 
-The system is designed to help small sari-sari store owners manage sales, products, inventory, and customer credit more easily.
+    def __str__(self):
+        return f"{self.student} - {self.course}"
 
- Users of the System
 
-Owner
+#FORMS.PY
+from django import forms
 
-· Manage products and inventory
+from .models import Course, Enrollment, Student
 
-· View sales and reports
 
-· Manage cashier accounts
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            "student_id",
+            "first_name",
+            "last_name",
+            "email",
+            "birthdate",
+            "address",
+        ]
+        widgets = {
+            "student_id": forms.TextInput(attrs={"class": "form-control"}),
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "birthdate": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}
+            ),
+            "address": forms.TextInput(attrs={"class": "form-control"}),
+        }
 
-· Manage customer credit
 
-Cashier
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ["code", "title", "units"]
+        widgets = {
+            "code": forms.TextInput(attrs={"class": "form-control"}),
+            "title": forms.TextInput(attrs={"class": "form-control"}),
 
-· Process customer purchases
 
-· View products
 
-· Record payments
+#VIEWS.PY
+from django.shortcuts import get_object_or_404, redirect, render
 
-· Record customer credit
+from .forms import CourseForm, EnrollmentForm, StudentForm
+from .models import Course, Enrollment, Student
 
-Type of Application
 
-Mobile Application
+def student_list(request):
+    return render(request, "enrollment/list.html", {
+        "title": "Students",
+        "items": Student.objects.all(),
+        "add_url": "student_add",
+        "edit_url": "student_edit",
+    })
 
-System Description
 
-The system is a POS nad Inventory Management System for a Sari-sari store.
+def course_list(request):
+    return render(request, "enrollment/list.html", {
+        "title": "Courses",
+        "items": Course.objects.all(),
+        "add_url": "course_add",
+        "edit_url": "course_edit",
+    })
 
-It allows the owner and casshier to process sales, manage products, monitor inventory, view sales records, and record customer credits.
 
-II. System Requirements
+def enrollment_list(request):
+    return render(request, "enrollment/list.html", {
+        "title": "Enrollments",
+        "items": Enrollment.objects.select_related("student", "course"),
+        "add_url": "enrollment_add",
+        "edit_url": "enrollment_edit",
+    })
 
-1. Functional Requirements
 
-1. The system should allow the owner and cashier to log in securely.
+def save_form(request, form_class, model, pk, list_name, title):
+    instance = get_object_or_404(model, pk=pk) if pk else None
 
-2. The owner can add, edit, and remove products.
+#URLS.PY
+from django.urls import path
 
-3. The system automatically reduces the stock of the product when a sale is confirmed.
+from . import views
 
-4. The cashier can process customer purchases.
+urlpatterns = [
+    path("", views.student_list, name="student_list"),
+    path("students/add/", views.student_save, name="student_add"),
+    path("students/<int:pk>/edit/", views.student_save, name="student_edit"),
+    path("courses/", views.course_list, name="course_list"),
+    path("courses/add/", views.course_save, name="course_add"),
+    path("courses/<int:pk>/edit/", views.course_save, name="course_edit"),
+    path("enrollments/", views.enrollment_list, name="enrollment_list"),
+    path("enrollments/add/", views.enrollment_save, name="enrollment_add"),
+    path("enrollments/<int:pk>/edit/", views.enrollment_save, name="enrollment_edit"),
+]
 
-5. The system calculates the total amount and the change.
 
-6. The system logs the completed sale transactions.
 
-7. The owner can see the sales reports daily and monthly.
 
-Ito yung mga handouts, kayo na bahala mag expand nito
 
-1. Project Title - Bespren Johny's Fried Chicken Order Management System
-2. Business Background - (ask the interviewers about this)
-3. Business Problem - (ask the interviewers about this)
-4. Proposed Solution - A web-based order management system
-5. Objectives - To make customer ordering online much easier, and attract more customers via the landing page
-6. Scope and Limitations - It does not track the order delivery in real-time
-7. System Features - Landing page, user account management, ordering system
-8. Database Design (ERD) - Nasa GitHub issues ito pero this is to be discussed ulit
-9. System Screenshots - Wala pa muna ito
-10. Conclusion - Wala pa muna ito
 
-8. When a product reaches the minimum stock level the system inform the owner.
-
-9. Users can record customer credit (purchased products, total amount, payment & remaining balance).
-
-2. Non-Functional Requirements
-
-1. The system should be simple and easy to use.
-
-2. Sales transactions should be processed within a few seconds.
-
-3. Only authorized users can access the system.
-
-4. The system should support basic offline use.
-
-5. Completed sales should not be accidentally lost.
-
-3. Business Rules
-
-1. Product stock decreases automatically after a successful sale.
-
-2. Only the owner can add, edit, or delete products.
-
-3. The cashier can ring up sales , but can not directly change inventory .
-
-4. A product is marked as low stock when its quantity reaches the minimum level.
-
-5. A sale cannot be completed if the requested quantity exceeds the available stock.
-
-6. Only the owner can manage cashier accounts.
-
- 
-
-III. UI/UX DESIGN
