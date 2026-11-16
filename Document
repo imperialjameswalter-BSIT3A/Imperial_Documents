@@ -341,3 +341,82 @@ class Enrollment(models.Model):
     def __str__(self):
         return f"{self.student} - {self.course}"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .forms import CourseForm, EnrollmentForm, StudentForm
+from .models import Course, Enrollment, Student
+
+
+def student_list(request):
+    return render(request, "enrollment/list.html", {
+        "title": "Students",
+        "items": Student.objects.all(),
+        "add_url": "student_add",
+        "edit_url": "student_edit",
+    })
+
+
+def course_list(request):
+    return render(request, "enrollment/list.html", {
+        "title": "Courses",
+        "items": Course.objects.all(),
+        "add_url": "course_add",
+        "edit_url": "course_edit",
+    })
+
+
+def enrollment_list(request):
+    return render(request, "enrollment/list.html", {
+        "title": "Enrollments",
+        "items": Enrollment.objects.select_related("student", "course"),
+        "add_url": "enrollment_add",
+        "edit_url": "enrollment_edit",
+    })
+
+
+def save_form(request, form_class, model, pk, list_name, title):
+    instance = get_object_or_404(model, pk=pk) if pk else None
+    form = form_class(request.POST or None, instance=instance)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect(list_name)
+    label = "Edit" if pk else "Add"
+    return render(request, "enrollment/form.html", {
+        "form": form,
+        "title": f"{label} {title}",
+        "back": list_name,
+    })
+
+
+def student_save(request, pk=None):
+    return save_form(request, StudentForm, Student, pk, "student_list", "Student")
+
+
+def course_save(request, pk=None):
+    return save_form(request, CourseForm, Course, pk, "course_list", "Course")
+
+
+def enrollment_save(request, pk=None):
+    return save_form(
+        request, EnrollmentForm, Enrollment, pk, "enrollment_list", "Enrollment"
+    )
