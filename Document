@@ -76,8 +76,41 @@ class CourseForm(forms.ModelForm):
         widgets = {
             "code": forms.TextInput(attrs={"class": "form-control"}),
             "title": forms.TextInput(attrs={"class": "form-control"}),
+            "units": forms.NumberInput(attrs={"class": "form-control", "min": 1}),
+        }
 
 
+class EnrollmentForm(forms.ModelForm):
+    class Meta:
+        model = Enrollment
+        fields = ["student", "course", "school_year", "semester"]
+        widgets = {
+            "student": forms.Select(attrs={"class": "form-control"}),
+            "course": forms.Select(attrs={"class": "form-control"}),
+            "school_year": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "2026-2027"}
+            ),
+            "semester": forms.Select(attrs={"class": "form-control"}),
+        }
+
+    def clean(self):
+        data = super().clean()
+        student = data.get("student")
+        course = data.get("course")
+        year = data.get("school_year")
+        semester = data.get("semester")
+        if student and course and year and semester:
+            duplicate = Enrollment.objects.filter(
+                student=student,
+                course=course,
+                school_year=year,
+                semester=semester,
+            ).exclude(pk=self.instance.pk)
+            if duplicate.exists():
+                raise forms.ValidationError(
+                    "This student is already enrolled in this course."
+                )
+        return data
 
 #VIEWS.PY
 from django.shortcuts import get_object_or_404, redirect, render
